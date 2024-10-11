@@ -3,13 +3,20 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"github.com/sqweek/dialog"
 	"log"
 	"os"
 )
 
 func main() {
-	// Открываем CSV файл
-	file, err := os.Open("sample.csv")
+	// Открываем диалоговое окно для выбора файла
+	filename, err := dialog.File().Filter("CSV Files", "csv").Title("Выберите CSV файл").Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Открываем выбранный файл
+	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,7 +29,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Выводим данные
+	// Выводим содержимое CSV
 	for _, record := range records {
 		fmt.Println(record)
 	}
